@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 const PhoneBook = () => {
-    const [persons, setPersons] = useState([{ name: 'Arto Hellas', id: 1 }])
+    const [persons, setPersons] = useState([{ name: 'Arto Hellas', number:'848658' ,id: 1}])
     const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
 
     const addPerson = (event) => {
         event.preventDefault()
@@ -18,6 +19,7 @@ const PhoneBook = () => {
 
         const personObject = {
             name: newName,
+            number: newNumber,
             id: persons.length + 1
         }
 
@@ -28,6 +30,10 @@ const PhoneBook = () => {
 
     const handlePersonChange = (event) => {
         setNewName(event.target.value)
+    }
+
+    const handleNumberChange = (event) => {
+        setNewNumber(event.target.value)
     }
 
     return (
@@ -44,6 +50,14 @@ const PhoneBook = () => {
                 </div>
 
                 <div>
+                    number:{' '}
+                    <input
+                        value={newNumber}
+                        onChange={handleNumberChange}
+                    />
+                </div>
+
+                <div>
                     <button type="submit">add</button>
                 </div>
             </form>
@@ -51,7 +65,7 @@ const PhoneBook = () => {
             <h2>Numbers</h2>
             <ul>
                 {persons.map(person => (
-                    <li key={person.id}>{person.name}</li>
+                    <li key={person.id}>{person.name} {person.number}</li>
                 ))}
             </ul>
         </div>
