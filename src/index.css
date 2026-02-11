@@ -1,0 +1,21 @@
+/* src/index.css */
+
+.notification {
+    font-size: 18px;
+    border-style: solid;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+}
+
+.notification.success {
+    color: #1b5e20;
+    background: #d9f7dd;
+    border-color: #2e7d32;
+}
+
+.notification.error {
+    color: #b71c1c;
+    background: #ffe0e0;
+    border-color: #c62828;
+}

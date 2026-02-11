@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react'
 import personService from '../services/Person.jsx'
+import Notification from "../components/Notification.jsx"
+
 
 
 import Filter from "../components/persons/Filter.jsx";
@@ -24,6 +26,7 @@ const PhoneBook = () => {
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
 
+
     const addPerson = (event) => {
         event.preventDefault()
 
@@ -40,13 +43,22 @@ const PhoneBook = () => {
             personService
                 .update(existing.id, updatedPerson)
                 .then(returnedPerson => {
-                    setPersons(persons.map(p => p.id !== existing.id ? p : returnedPerson))
-                    setNewName('')
-                    setNewNumber('')
+                    setPersons(
+                        persons.map(p =>
+                            p.id !== existing.id ? p : returnedPerson
+                        )
+                    )
+
+                    showSuccess(`Updated number for ${returnedPerson.name}`)
                 })
                 .catch(() => {
-                    alert(`Impossible de mettre à jour ${existing.name} (peut-être supprimé du serveur)`)
-                    setPersons(persons.filter(p => p.id !== existing.id))
+                    showError(
+                        `Information of ${existing.name} was already removed from server`
+                    )
+
+                    setPersons(
+                        persons.filter(p => p.id !== existing.id)
+                    )
                 })
 
             return
@@ -59,6 +71,11 @@ const PhoneBook = () => {
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('')
+
+                showSuccess(`Added ${returnedPerson.name}`)
+            })
+            .catch(() => {
+                showError('Failed to add person')
             })
     }
 
@@ -78,6 +95,28 @@ const PhoneBook = () => {
             })
     }
 
+    const [notification, setNotification] = useState(null)
+    const [notificationType, setNotificationType] = useState(null)
+
+    const showSuccess = (message) => {
+        setNotification(message)
+        setNotificationType('success')
+
+        setTimeout(() => {
+            setNotification(null)
+            setNotificationType(null)
+        }, 5000)
+    }
+
+    const showError = (message) => {
+        setNotification(message)
+        setNotificationType('error')
+
+        setTimeout(() => {
+            setNotification(null)
+            setNotificationType(null)
+        }, 5000)
+    }
 
     const handleFilterChange = (e) => setFilter(e.target.value)
     const handleNameChange = (e) => setNewName(e.target.value)
@@ -93,6 +132,8 @@ const PhoneBook = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notification} type={notificationType} />
+
             <Filter filter={filter} onFilterChange={handleFilterChange} />
 
             <h3>Add a new</h3>
