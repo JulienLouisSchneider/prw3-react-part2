@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from "../components/persons/Filter.jsx";
+import PersonForm from "../components/persons/PersonForm.jsx";
+import Persons from "../components/persons/Person.jsx";
 
 const PhoneBook = () => {
     const [persons, setPersons] = useState([
@@ -30,6 +33,10 @@ const PhoneBook = () => {
         setNewNumber('')
     }
 
+    const handleFilterChange = (e) => setFilter(e.target.value)
+    const handleNameChange = (e) => setNewName(e.target.value)
+    const handleNumberChange = (e) => setNewNumber(e.target.value)
+
     const personsToShow =
         filter.trim() === ''
             ? persons
@@ -40,42 +47,19 @@ const PhoneBook = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-
-            <div>
-                filter shown with:{' '}
-                <input
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                />
-            </div>
+            <Filter filter={filter} onFilterChange={handleFilterChange} />
 
             <h3>Add a new</h3>
-            <form onSubmit={addPerson}>
-                <div>
-                    name:{' '}
-                    <input
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    number:{' '}
-                    <input
-                        value={newNumber}
-                        onChange={(e) => setNewNumber(e.target.value)}
-                    />
-                </div>
-                <button type="submit">add</button>
-            </form>
+            <PersonForm
+                onSubmit={addPerson}
+                newName={newName}
+                onNameChange={handleNameChange}
+                newNumber={newNumber}
+                onNumberChange={handleNumberChange}
+            />
 
             <h2>Numbers</h2>
-            <ul>
-                {personsToShow.map(person => (
-                    <li key={person.id}>
-                        {person.name} {person.number}
-                    </li>
-                ))}
-            </ul>
+            <Persons persons={personsToShow} />
         </div>
     )
 }
