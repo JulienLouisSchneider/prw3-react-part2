@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import axios from 'axios'
+
 import Filter from "../components/persons/Filter.jsx";
 import PersonForm from "../components/persons/PersonForm.jsx";
 import Persons from "../components/persons/Person.jsx";
@@ -28,9 +30,13 @@ const PhoneBook = () => {
             id: persons.length + 1
         }
 
-        setPersons(persons.concat(personObject))
-        setNewName('')
-        setNewNumber('')
+        axios
+            .post('http://localhost:3001/persons', personObject)
+            .then(response => {
+                setPersons(persons.concat(response.data))
+                setNewName('')
+                setNewNumber('')
+            })
     }
 
     const handleFilterChange = (e) => setFilter(e.target.value)
