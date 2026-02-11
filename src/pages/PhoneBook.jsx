@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import personService from '../services/Person.jsx'
 
 
@@ -7,10 +7,18 @@ import PersonForm from "../components/persons/PersonForm.jsx";
 import Persons from "../components/persons/Person.jsx";
 
 const PhoneBook = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '848658', id: 1 },
-        { name: 'Ada Lovelace', number: '123', id: 2 },
-    ])
+    const [persons, setPersons] = useState([])
+
+    useEffect(() => {
+        personService
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
+            })
+            .catch(() => {
+                alert('Erreur lors du chargement des personnes depuis le serveur')
+            })
+    }, [])
 
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
@@ -30,7 +38,7 @@ const PhoneBook = () => {
             const updatedPerson = { ...existing, number: newNumber }
 
             personService
-                .update(existing.id, updatedPerson) // -> PUT
+                .update(existing.id, updatedPerson)
                 .then(returnedPerson => {
                     setPersons(persons.map(p => p.id !== existing.id ? p : returnedPerson))
                     setNewName('')
@@ -46,7 +54,7 @@ const PhoneBook = () => {
 
         const personObject = { name: newName, number: newNumber }
         personService
-            .create(personObject) // -> POST
+            .create(personObject)
             .then(returnedPerson => {
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
