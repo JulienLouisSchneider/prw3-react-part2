@@ -2,6 +2,7 @@ import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 import Course from './pages/Course'
 import PhoneBook from "./pages/PhoneBook.jsx";
 
+
 const App = () => {
     return (
         <BrowserRouter>
